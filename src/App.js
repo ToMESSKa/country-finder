@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
 
-function App() {
+import { GET_COUNTRIES } from "./query";
+
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  useQuery,
+  gql,
+} from "@apollo/client";
+
+const App = () => {
+  const { loading, error, data } = useQuery(GET_COUNTRIES, {
+    variables: { page: 3 },
+  });
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error {error.message}</p>;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <>
+      <header>
+        <h1 className="countries-list">Countries</h1>
       </header>
-    </div>
+      <div className="row">
+        {data.countries.map(country => <div>{country.capital}</div>)}
+      </div>
+    </>
   );
-}
+};
 
 export default App;
