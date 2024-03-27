@@ -1,11 +1,15 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
-const GET_COUNTRIES= gql`
-query getCountries {
-    countries {
+const GET_COUNTRIES = gql`
+  query getCountries ($filter: CountryFilterInput) {
+    countries(filter: $filter) {
+      code
+      name
       capital
       currency
-    }
-}`
+      }
+      }
+`;
 
-export { GET_COUNTRIES }
+
+export { GET_COUNTRIES };

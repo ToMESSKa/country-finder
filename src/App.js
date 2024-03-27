@@ -1,10 +1,10 @@
 import logo from "./logo.svg";
 import "./App.css";
-
+import Table from "./Table";
 import { GET_COUNTRIES } from "./query";
 
 import {
-  ApolloClient,
+  useMutation,
   InMemoryCache,
   ApolloProvider,
   useQuery,
@@ -12,9 +12,20 @@ import {
 } from "@apollo/client";
 
 const App = () => {
-  const { loading, error, data } = useQuery(GET_COUNTRIES, {
-    variables: { page: 3 },
-  });
+  const { data, loading, error } = useQuery(GET_COUNTRIES, {variables: 
+    {
+      filter: {
+        currency: {
+          eq: "USD"
+        }
+      }
+    }
+  
+  })
+
+  const finddata = () => {
+    console.log(data);
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error {error.message}</p>;
@@ -22,10 +33,11 @@ const App = () => {
   return (
     <>
       <header>
-        <h1 className="countries-list">Countries</h1>
+        <h1 className="countries-list">Country Finder</h1>
       </header>
       <div className="row">
-        {data.countries.map(country => <div>{country.capital}</div>)}
+        <Table data={data}></Table>
+        <button onClick={finddata}></button>
       </div>
     </>
   );
