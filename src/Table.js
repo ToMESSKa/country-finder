@@ -1,9 +1,21 @@
 import "./App.css";
 import { Grid, Row, Col } from "rsuite";
+import { GET_COUNTRIES } from "./query";
+
+import {
+  useMutation,
+  InMemoryCache,
+  ApolloProvider,
+  useQuery,
+  gql,
+  useLazyQuery,
+} from "@apollo/client";
 
 const Table = (props) => {
 
   console.log(props)
+
+  
 
   return (
     <div className="table">
@@ -15,7 +27,8 @@ const Table = (props) => {
             <Col className="column">Capital</Col>
             <Col className="column">Currency</Col>
             </Row>
-          {props.data.countries.map((country) => (
+          {props.data &&
+        props.data.countries && props.data.countries.map((country) => (
             <Row className="row">
             <Col className="column">{country.code}</Col>
             <Col className="column">{country.name}</Col>
