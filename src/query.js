@@ -11,4 +11,19 @@ const GET_COUNTRIES = gql`
   }
 `;
 
-export { GET_COUNTRIES };
+const GET_CONTINENTS = gql`
+  query getContinents {
+    continents {
+      name
+      code
+      countries {
+        code
+        name
+        capital
+        currency
+      }
+    }
+  }
+`;
+
+export { GET_COUNTRIES, GET_CONTINENTS };
