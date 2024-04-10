@@ -18,9 +18,9 @@ import {
   gql,
   useLazyQuery,
 } from "@apollo/client";
+import { eventWrapper } from "@testing-library/user-event/dist/utils";
 
 const App = () => {
- 
   const [searchFilter, setSearchFilter] = useState("");
   const [executeSearch, { data }] = useLazyQuery(GET_COUNTRIES, {
     variables: {
@@ -32,16 +32,22 @@ const App = () => {
     },
   });
 
+  const handleSearchForCurrency = (value) => {
+    setSearchFilter(value);
+    executeSearch({
+      variables: { eq: searchFilter },
+    })
+  };
+
   return (
     <>
       <header>
         <h1 className="countries-list">Country Finder</h1>
       </header>
-
       <div>
         Search
-        <input type="text" onChange={(e) => setSearchFilter(e.target.value)} />
-        <button
+        <input type="text" onChange={(e) => handleSearch(e.target.value)} />
+        {/* <button
           onClick={() =>
             executeSearch({
               variables: { eq: searchFilter },
@@ -49,18 +55,9 @@ const App = () => {
           }
         >
           OK
-        </button>
+        </button> */}
       </div>
       <Table data={data}></Table>
-
-      {/* <div className="row">
-        <SearchForm
-          currency={currency}
-          setCurrency={setCurrency}
-          getCountriesByCurrency={getCountriesByCurrency}
-        ></SearchForm>
-        
-      {/* </div> */}
     </>
   );
 };
