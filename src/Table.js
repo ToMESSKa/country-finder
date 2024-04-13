@@ -13,9 +13,6 @@ import {
 
 const Table = (props) => {
 
-  console.log(props)
-
-  
 
   return (
     <div className="table">

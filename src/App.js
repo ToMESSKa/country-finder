@@ -1,10 +1,13 @@
 import logo from "./logo.svg";
 import "./App.css";
 import Table from "./Table";
-import { GET_COUNTRIES, GET_CONTINENTS} from "./query";
+import { GET_COUNTRIES, GET_CONTINENTS } from "./query";
 import React, { useState, useEffect } from "react";
 
 import { Formik, Field, Form } from "formik";
+import { Grid, Row, Col } from "rsuite";
+import ContinentSearch from "./ContinentSearch";
+import CurrencySearch from "./CurrencySearch";
 
 import {
   useMutation,
@@ -30,10 +33,8 @@ const App = () => {
     },
   });
 
-  
-
   const handleSearchForCurrency = (value) => {
-    setSearchFilter(value);
+    setSearchFilter(value)
     executeSearch({
       variables: { eq: searchFilter },
     });
@@ -67,6 +68,7 @@ const App = () => {
                 <Field type="radio" name="picked" value="One" />
                 Search by continent and currency
               </label>
+              <br />
               <label>
                 <Field type="radio" name="picked" value="Two" />
                 Search by country code
@@ -75,25 +77,13 @@ const App = () => {
           </Form>
         </Formik>
       </div>
-      <Formik>
-      <Form>
-           <Field as="select" name="color">
-           {continents && continents.continents.map((continent) => (
-             <option value="red">{continent.name}</option>
-             ))}
-           </Field>
-         </Form>
-      </Formik>
-    
-      <Formik>
-          <form>
-            <input
-              type="text"
-              onChange={event => handleSearchForCurrency(event.target.value)}
-              name="name"
-            />
-          </form>
-          </Formik>
+      <Row className="row">
+        <ContinentSearch></ContinentSearch>
+        <CurrencySearch
+          setSearchFilter={setSearchFilter}
+          handleSearchForCurrency={handleSearchForCurrency}
+        ></CurrencySearch>
+      </Row>
       <Table data={data}></Table>
     </>
   );
