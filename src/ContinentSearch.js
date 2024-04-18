@@ -8,48 +8,39 @@ import { Formik, Field, Form } from "formik";
 import { Grid, Row, Col } from "rsuite";
 
 import { useQuery, useLazyQuery } from "@apollo/client";
-import { eventWrapper } from "@testing-library/user-event/dist/utils";
 
 const ContinentSearch = (props) => {
-  const [searchFilter, setSearchFilter] = useState("");
   const { data: continents } = useQuery(GET_CONTINENTS);
 
-  const [executeSearch, { data }] = useLazyQuery(GET_COUNTRIES, {
-    variables: {
-      filter: {
-        currency: {
-          eq: searchFilter,
-        },
-      },
-    },
-  });
+  useEffect(() => {
+    props.handleSearchForContinentAndCurrency();
+  }, [props.continent]);
 
-  const handleSearchForCurrency = (value) => {
-    setSearchFilter(value);
-    executeSearch({
-      variables: { eq: searchFilter },
-    });
-  };
 
   return (
-    <Formik initialValues={{ continent: "Asia" }}>
+    <Formik initialValues={{ continent: "Continent" }}>
       {(formikProps) => {
         const { values } = formikProps;
         return (
           <Form>
-              <Field as="select" name="continent" disabled={props.continentAndCurrencySearchDisabled} >
-                {continents &&
-                  continents.continents.map((continent) => (
-                    <option
-                      onClick={() => {
-                        console.log("selected values", values);
-                      }}
-                      value={continent.name}
-                    >
-                      {continent.name}
-                    </option>
-                  ))}
-              </Field>
+            <Field
+              as="select"
+              name="continent"
+              disabled={props.continentAndCurrencySearchDisabled}
+            >
+              <option selected>Continent</option>
+              {continents &&
+                continents.continents.map((continent) => (
+                  <option
+                    onClick={() => {
+                      props.setContinent(values.continent);
+                    }}
+                    value={continent.code}
+                  >
+                    {continent.name}
+                  </option>
+                ))}
+            </Field>
           </Form>
         );
       }}

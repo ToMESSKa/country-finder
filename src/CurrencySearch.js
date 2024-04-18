@@ -15,8 +15,8 @@ const CurrencySearch = (props) => {
   const [currency, setCurrency] = useState("");
 
   useEffect(() => {
-      props.handleSearchForCurrency(props.searchFilter)
-  }, [props.searchFilter]);
+      props.handleSearchForContinentAndCurrency()
+  }, [props.currency]);
 
 
   return (
@@ -32,7 +32,7 @@ const CurrencySearch = (props) => {
               disabled={props.continentAndCurrencySearchDisabled} 
               as="input"
               onChange={(e) => {
-                props.setSearchFilter(e.target.value)
+                props.setCurrency(e.target.value)
                 handleChange(e);
               }}
               name="currency"

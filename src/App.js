@@ -18,10 +18,13 @@ import {
   useLazyQuery,
 } from "@apollo/client";
 import { eventWrapper } from "@testing-library/user-event/dist/utils";
+import RadioGroup from "./RadioGroup";
 
 const App = () => {
-  const [searchFilter, setSearchFilter] = useState(" ");
-  const { data: continents } = useQuery(GET_CONTINENTS);
+  const [continent, setContinent] = useState(false);
+  const [currency, setCurrency] = useState();
+
+  const [searchVariables, setSearchVariables] = useState();
 
   const [
     continentAndCurrencySearchDisabled,
@@ -29,27 +32,22 @@ const App = () => {
   ] = useState(true);
 
   const [executeSearch, { data }] = useLazyQuery(GET_COUNTRIES, {
-    variables: {
-      filter: {
-        currency: {
-          eq: searchFilter,
-        },
-      },
-    },
+    variables: searchVariables,
   });
 
-  const handleSearchForCurrency = (value) => {
-    setSearchFilter(value);
+  const handleSearchForContinentAndCurrency = () => {
+    if (continent) {
+      setSearchVariables({
+        filter: { continent: { eq: continent }, currency: { eq: currency } },
+      });
+    } else {
+      setSearchVariables({ filter: { currency: { eq: currency } } });
+    }
     executeSearch({
-      variables: { eq: searchFilter },
+      searchVariables,
     });
   };
 
-  const radioHandler = (value) => {
-    if (value === "continent-currency"){
-      setContinentAndCurrencySearchDisabled(false)
-    }
-  };
 
   return (
     <>
@@ -58,43 +56,24 @@ const App = () => {
       </header>
       <div>
         Select search type
-        <Formik
-          initialValues={{
-            picked: "",
-          }}
-        >
-          <Form>
-            <div
-              onChange={(event) => {
-                radioHandler(event.target.value);
-              }}
-              role="group"
-              aria-labelledby="my-radio-group"
-            >
-              <label>
-                <Field type="radio" name="picked" value="continent-currency" />
-                Search by continent and currency
-              </label>
-              <br />
-              <label>
-                <Field type="radio" name="picked" value="country-code" />
-                Search by country code
-              </label>
-            </div>
-          </Form>
-        </Formik>
+        <RadioGroup setContinentAndCurrencySearchDisabled={setContinentAndCurrencySearchDisabled}></RadioGroup>
       </div>
       <Row className="row">
-        <ContinentSearch continentAndCurrencySearchDisabled={
+        <ContinentSearch
+          continent={continent}
+          setContinent={setContinent}
+          continentAndCurrencySearchDisabled={
             continentAndCurrencySearchDisabled
-          }></ContinentSearch>
+          }
+          handleSearchForContinentAndCurrency={handleSearchForContinentAndCurrency}
+        ></ContinentSearch>
         <CurrencySearch
           continentAndCurrencySearchDisabled={
             continentAndCurrencySearchDisabled
           }
-          searchFilter={searchFilter}
-          setSearchFilter={setSearchFilter}
-          handleSearchForCurrency={handleSearchForCurrency}
+          currency={currency}
+          setCurrency={setCurrency}
+          handleSearchForContinentAndCurrency={handleSearchForContinentAndCurrency}
         ></CurrencySearch>
       </Row>
       <Table data={data}></Table>

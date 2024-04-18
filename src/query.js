@@ -7,6 +7,10 @@ const GET_COUNTRIES = gql`
       name
       capital
       currency
+      continent {
+        code
+        name
+      }
     }
   }
 `;
