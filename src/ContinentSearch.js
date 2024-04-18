@@ -37,7 +37,7 @@ const ContinentSearch = (props) => {
         const { values } = formikProps;
         return (
           <Form>
-              <Field as="select" name="continent">
+              <Field as="select" name="continent" disabled={props.continentAndCurrencySearchDisabled} >
                 {continents &&
                   continents.continents.map((continent) => (
                     <option

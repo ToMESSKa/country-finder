@@ -13,6 +13,12 @@ import { eventWrapper } from "@testing-library/user-event/dist/utils";
 const CurrencySearch = (props) => {
 
   const [currency, setCurrency] = useState("");
+
+  useEffect(() => {
+      props.handleSearchForCurrency(props.searchFilter)
+  }, [props.searchFilter]);
+
+
   return (
     <Formik
       initialValues={{ currency: "" }}
@@ -23,9 +29,10 @@ const CurrencySearch = (props) => {
         return (
           <Form>
             <Field
+              disabled={props.continentAndCurrencySearchDisabled} 
               as="input"
               onChange={(e) => {
-                props.handleSearchForCurrency(e.target.value)
+                props.setSearchFilter(e.target.value)
                 handleChange(e);
               }}
               name="currency"

@@ -20,8 +20,13 @@ import {
 import { eventWrapper } from "@testing-library/user-event/dist/utils";
 
 const App = () => {
-  const [searchFilter, setSearchFilter] = useState("");
+  const [searchFilter, setSearchFilter] = useState(" ");
   const { data: continents } = useQuery(GET_CONTINENTS);
+
+  const [
+    continentAndCurrencySearchDisabled,
+    setContinentAndCurrencySearchDisabled,
+  ] = useState(true);
 
   const [executeSearch, { data }] = useLazyQuery(GET_COUNTRIES, {
     variables: {
@@ -34,14 +39,16 @@ const App = () => {
   });
 
   const handleSearchForCurrency = (value) => {
-    setSearchFilter(value)
+    setSearchFilter(value);
     executeSearch({
       variables: { eq: searchFilter },
     });
   };
 
   const radioHandler = (value) => {
-    console.log(value);
+    if (value === "continent-currency"){
+      setContinentAndCurrencySearchDisabled(false)
+    }
   };
 
   return (
@@ -65,12 +72,12 @@ const App = () => {
               aria-labelledby="my-radio-group"
             >
               <label>
-                <Field type="radio" name="picked" value="One" />
+                <Field type="radio" name="picked" value="continent-currency" />
                 Search by continent and currency
               </label>
               <br />
               <label>
-                <Field type="radio" name="picked" value="Two" />
+                <Field type="radio" name="picked" value="country-code" />
                 Search by country code
               </label>
             </div>
@@ -78,8 +85,14 @@ const App = () => {
         </Formik>
       </div>
       <Row className="row">
-        <ContinentSearch></ContinentSearch>
+        <ContinentSearch continentAndCurrencySearchDisabled={
+            continentAndCurrencySearchDisabled
+          }></ContinentSearch>
         <CurrencySearch
+          continentAndCurrencySearchDisabled={
+            continentAndCurrencySearchDisabled
+          }
+          searchFilter={searchFilter}
           setSearchFilter={setSearchFilter}
           handleSearchForCurrency={handleSearchForCurrency}
         ></CurrencySearch>
