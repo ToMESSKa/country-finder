@@ -19,6 +19,7 @@ import {
 } from "@apollo/client";
 import { eventWrapper } from "@testing-library/user-event/dist/utils";
 import RadioGroup from "./RadioGroup";
+import CountryCodeSearch from "./CountryCodeSearch";
 
 const App = () => {
   const [continent, setContinent] = useState(false);
@@ -48,7 +49,6 @@ const App = () => {
     });
   };
 
-
   return (
     <>
       <header>
@@ -56,7 +56,11 @@ const App = () => {
       </header>
       <div>
         Select search type
-        <RadioGroup setContinentAndCurrencySearchDisabled={setContinentAndCurrencySearchDisabled}></RadioGroup>
+        <RadioGroup
+          setContinentAndCurrencySearchDisabled={
+            setContinentAndCurrencySearchDisabled
+          }
+        ></RadioGroup>
       </div>
       <Row className="row">
         <ContinentSearch
@@ -65,7 +69,9 @@ const App = () => {
           continentAndCurrencySearchDisabled={
             continentAndCurrencySearchDisabled
           }
-          handleSearchForContinentAndCurrency={handleSearchForContinentAndCurrency}
+          handleSearchForContinentAndCurrency={
+            handleSearchForContinentAndCurrency
+          }
         ></ContinentSearch>
         <CurrencySearch
           continentAndCurrencySearchDisabled={
@@ -73,8 +79,15 @@ const App = () => {
           }
           currency={currency}
           setCurrency={setCurrency}
-          handleSearchForContinentAndCurrency={handleSearchForContinentAndCurrency}
+          handleSearchForContinentAndCurrency={
+            handleSearchForContinentAndCurrency
+          }
         ></CurrencySearch>
+      </Row>
+      <Row>
+        <Col>
+          <CountryCodeSearch></CountryCodeSearch>
+        </Col>
       </Row>
       <Table data={data}></Table>
     </>
