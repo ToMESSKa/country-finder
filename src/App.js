@@ -25,7 +25,7 @@ const App = () => {
   const [continent, setContinent] = useState(false);
   const [currency, setCurrency] = useState();
   const [countryCode, setCountryCode] = useState();
-  const [currencyValue, setCurrencyValue] = useState();
+  const [countries, setCountries] = useState();
 
   const [searchVariables, setSearchVariables] = useState();
 
@@ -37,8 +37,11 @@ const App = () => {
   const [countryCodeSearchDisabled, setCountryCodeSearchDisabled] =
     useState(false);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [countriesPerPge, SetPostsPerPage] = useState(10);
+
   const [executeSearch, { data }] = useLazyQuery(GET_COUNTRIES, {
-    variables: searchVariables,
+    variables: searchVariables, onCompleted: setCountries
   });
 
   const handleSearchForContinentAndCurrency = () => {
@@ -58,10 +61,13 @@ const App = () => {
     });
   };
 
-  const handleSearchForCountryCode = () => {
-    setSearchVariables({
-      filter: { code: { eq: countryCode } },
-    });
+
+  const indexOfLastCountry = currentPage * countriesPerPge;
+  const indexOfFirstCountry = indexOfLastCountry - countriesPerPge;
+
+  const handlePagination = (pageNumber) => {
+    let currentCountries = countries.countries.slice(indexOfFirstCountry, indexOfLastCountry);
+    console.log(currentCountries);
   };
 
   return (
@@ -72,7 +78,6 @@ const App = () => {
       <div>
         Select search type
         <RadioGroup
-        setCurrencyValue={setCurrencyValue}
           setContinent={setContinent}
           setCurrency={setCurrency}
           setCountryCode={setCountryCode}
@@ -111,11 +116,14 @@ const App = () => {
             countryCodeSearchDisabled={countryCodeSearchDisabled}
             setCountryCode={setCountryCode}
             countryCode={countryCode}
-            handleSearchForContinentAndCurrency={handleSearchForContinentAndCurrency}
+            handleSearchForContinentAndCurrency={
+              handleSearchForContinentAndCurrency
+            }
           ></CountryCodeSearch>
         </Row>
       </Col>
-      <Table data={data}></Table>
+      <button onClick={handlePagination}>SEE</button>
+      <Table data={countries}></Table>
     </>
   );
 };
