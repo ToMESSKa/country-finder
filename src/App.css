@@ -5,3 +5,13 @@
 .column {
   flex: 50%;
 }
+
+.search-form-container {
+  max-width: 300px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.country-code-form {
+  width: 292px;
+}

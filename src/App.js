@@ -24,6 +24,8 @@ import CountryCodeSearch from "./CountryCodeSearch";
 const App = () => {
   const [continent, setContinent] = useState(false);
   const [currency, setCurrency] = useState();
+  const [countryCode, setCountryCode] = useState();
+  const [currencyValue, setCurrencyValue] = useState();
 
   const [searchVariables, setSearchVariables] = useState();
 
@@ -32,12 +34,19 @@ const App = () => {
     setContinentAndCurrencySearchDisabled,
   ] = useState(true);
 
+  const [countryCodeSearchDisabled, setCountryCodeSearchDisabled] =
+    useState(false);
+
   const [executeSearch, { data }] = useLazyQuery(GET_COUNTRIES, {
     variables: searchVariables,
   });
 
   const handleSearchForContinentAndCurrency = () => {
-    if (continent) {
+    if (countryCode) {
+      setSearchVariables({
+        filter: { code: { eq: countryCode } },
+      });
+    } else if (continent) {
       setSearchVariables({
         filter: { continent: { eq: continent }, currency: { eq: currency } },
       });
@@ -49,6 +58,12 @@ const App = () => {
     });
   };
 
+  const handleSearchForCountryCode = () => {
+    setSearchVariables({
+      filter: { code: { eq: countryCode } },
+    });
+  };
+
   return (
     <>
       <header>
@@ -57,38 +72,49 @@ const App = () => {
       <div>
         Select search type
         <RadioGroup
+        setCurrencyValue={setCurrencyValue}
+          setContinent={setContinent}
+          setCurrency={setCurrency}
+          setCountryCode={setCountryCode}
           setContinentAndCurrencySearchDisabled={
             setContinentAndCurrencySearchDisabled
           }
+          setCountryCodeSearchDisabled={setCountryCodeSearchDisabled}
         ></RadioGroup>
       </div>
-      <Row className="row">
-        <ContinentSearch
-          continent={continent}
-          setContinent={setContinent}
-          continentAndCurrencySearchDisabled={
-            continentAndCurrencySearchDisabled
-          }
-          handleSearchForContinentAndCurrency={
-            handleSearchForContinentAndCurrency
-          }
-        ></ContinentSearch>
-        <CurrencySearch
-          continentAndCurrencySearchDisabled={
-            continentAndCurrencySearchDisabled
-          }
-          currency={currency}
-          setCurrency={setCurrency}
-          handleSearchForContinentAndCurrency={
-            handleSearchForContinentAndCurrency
-          }
-        ></CurrencySearch>
-      </Row>
-      <Row>
-        <Col>
-          <CountryCodeSearch></CountryCodeSearch>
-        </Col>
-      </Row>
+      <Col>
+        <Row className="search-form-container">
+          <ContinentSearch
+            continent={continent}
+            setContinent={setContinent}
+            continentAndCurrencySearchDisabled={
+              continentAndCurrencySearchDisabled
+            }
+            handleSearchForContinentAndCurrency={
+              handleSearchForContinentAndCurrency
+            }
+          ></ContinentSearch>
+          <CurrencySearch
+            continentAndCurrencySearchDisabled={
+              continentAndCurrencySearchDisabled
+            }
+            currency={currency}
+            setCurrency={setCurrency}
+            handleSearchForContinentAndCurrency={
+              handleSearchForContinentAndCurrency
+            }
+          ></CurrencySearch>
+        </Row>
+        <Row className="search-form-container">
+          <CountryCodeSearch
+            className="country-code-form"
+            countryCodeSearchDisabled={countryCodeSearchDisabled}
+            setCountryCode={setCountryCode}
+            countryCode={countryCode}
+            handleSearchForContinentAndCurrency={handleSearchForContinentAndCurrency}
+          ></CountryCodeSearch>
+        </Row>
+      </Col>
       <Table data={data}></Table>
     </>
   );

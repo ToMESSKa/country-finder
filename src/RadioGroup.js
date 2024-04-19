@@ -15,8 +15,13 @@ const RadioGroup = (props) => {
   const radioHandler = (value) => {
     if (value === "continent-currency") {
       props.setContinentAndCurrencySearchDisabled(false);
-    }else if (value === "continent-currency"){
-      props.setContinentAndCurrencySearchDisabled(false);
+      props.setCountryCodeSearchDisabled(true)
+      props.setCountryCode("")
+    }else if (value === "country-code"){
+      props.setContinentAndCurrencySearchDisabled(true);
+      props.setCountryCodeSearchDisabled(false)
+      props.setCurrency("")
+      props.setContinent("")
     }
   };
 
@@ -29,6 +34,7 @@ const RadioGroup = (props) => {
       <Form>
         <div
           onChange={(event) => {
+            console.log(event.target.value)
             radioHandler(event.target.value);
           }}
           role="group"

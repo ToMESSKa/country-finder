@@ -5,31 +5,36 @@ import { GET_COUNTRIES, GET_CONTINENTS } from "./query";
 import React, { useState, useEffect } from "react";
 
 import { Formik, Field, Form } from "formik";
-import { Grid, Row, Col } from "rsuite";
+import { Grid, Row, Col, Button } from "rsuite";
 
 import { useQuery, useLazyQuery } from "@apollo/client";
 import { eventWrapper } from "@testing-library/user-event/dist/utils";
 
 const CurrencySearch = (props) => {
 
-  const [currency, setCurrency] = useState("");
+  const [placeholder, setPlaceholder] = useState();
 
   useEffect(() => {
       props.handleSearchForContinentAndCurrency()
   }, [props.currency]);
 
+  const resetInput = () => {
+      setPlaceholder("")
+  };
+
 
   return (
     <Formik
-      initialValues={{ currency: "" }}
-      handleChange={(values) => console.log(values)}
+      initialValues={{ currency: props.currency }}
     >
       {(formikProps) => {
-        const { values, handleChange } = formikProps;
+        const { values, handleChange, resetForm } = formikProps;
         return (
           <Form>
             <Field
               disabled={props.continentAndCurrencySearchDisabled} 
+              value={props.currency}
+              placeholder="Currency"
               as="input"
               onChange={(e) => {
                 props.setCurrency(e.target.value)
@@ -40,6 +45,7 @@ const CurrencySearch = (props) => {
           </Form>
         );
       }}
+      
     </Formik>
   );
 };
