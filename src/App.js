@@ -8,6 +8,7 @@ import { Formik, Field, Form } from "formik";
 import { Grid, Row, Col } from "rsuite";
 import ContinentSearch from "./ContinentSearch";
 import CurrencySearch from "./CurrencySearch";
+import Pagination from "./Pagination";
 
 import {
   useMutation,
@@ -25,7 +26,9 @@ const App = () => {
   const [continent, setContinent] = useState(false);
   const [currency, setCurrency] = useState();
   const [countryCode, setCountryCode] = useState();
-  const [countries, setCountries] = useState();
+  const [countries, setCountries] = useState([]);
+  const [currentCountries, setCurrentCountries] = useState([]);
+  const [pageNumbers, setPageNumbers] = useState([]);
 
   const [searchVariables, setSearchVariables] = useState();
 
@@ -40,11 +43,56 @@ const App = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [countriesPerPge, SetPostsPerPage] = useState(10);
 
+  // const indexOfLastCountry = currentPage * countriesPerPge;
+  // const indexOfFirstCountry = indexOfLastCountry - countriesPerPge;
+
+  const handlePagination = () => {
+    let indexOfLastCountry = currentPage * countriesPerPge;
+    let indexOfFirstCountry = indexOfLastCountry - countriesPerPge;
+    let currentCountries = data.countries.slice(
+      indexOfFirstCountry,
+      indexOfLastCountry
+    );
+    setCountries(data.countries)
+    setCurrentCountries(currentCountries)
+    createPageNumbers()
+  };
+
+  const handlePag = () => {
+    console.log(countries)
+    let indexOfLastCountry = currentPage * countriesPerPge;
+    let indexOfFirstCountry = indexOfLastCountry - countriesPerPge;
+    let currentCountries = countries.slice(
+      indexOfFirstCountry,
+      indexOfLastCountry
+    );
+    console.log(currentCountries)
+    setCurrentCountries(currentCountries)
+
+  };
+
+  const createPageNumbers = () => {
+    console.log(data.countries)
+    let pageNumbersArray = []
+    let mayPageNumbers = data.countries.length / countriesPerPge
+    for (let i = 1; i < mayPageNumbers +1; i++) {
+      pageNumbersArray.push(i)
+    } 
+    setPageNumbers(pageNumbersArray)
+
+  };
+
+
+
   const [executeSearch, { data }] = useLazyQuery(GET_COUNTRIES, {
-    variables: searchVariables, onCompleted: setCountries
+    variables: searchVariables,
+    onCompleted: handlePagination,
   });
 
+  
+
   const handleSearchForContinentAndCurrency = () => {
+    console.log("hell")
     if (countryCode) {
       setSearchVariables({
         filter: { code: { eq: countryCode } },
@@ -61,14 +109,7 @@ const App = () => {
     });
   };
 
-
-  const indexOfLastCountry = currentPage * countriesPerPge;
-  const indexOfFirstCountry = indexOfLastCountry - countriesPerPge;
-
-  const handlePagination = (pageNumber) => {
-    let currentCountries = countries.countries.slice(indexOfFirstCountry, indexOfLastCountry);
-    console.log(currentCountries);
-  };
+ 
 
   return (
     <>
@@ -122,8 +163,9 @@ const App = () => {
           ></CountryCodeSearch>
         </Row>
       </Col>
-      <button onClick={handlePagination}>SEE</button>
-      <Table data={countries}></Table>
+      <button onClick={(e) => handlePagination()}>SEE</button>
+      <Table data={currentCountries}></Table>
+      <Pagination handlePag ={handlePag} pageNumbers={pageNumbers} setCurrentPage={setCurrentPage} currentPage={currentPage}></Pagination>
     </>
   );
 };

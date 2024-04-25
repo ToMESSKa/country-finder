@@ -15,3 +15,14 @@
 .country-code-form {
   width: 292px;
 }
+
+
+.pagination{
+  margin-top: 10%;
+  display: flex;
+  justify-content: center;
+}
+
+.page{
+  width: 20px;
+}

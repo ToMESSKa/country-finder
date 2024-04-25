@@ -24,8 +24,7 @@ const Table = (props) => {
             <Col className="column">Capital</Col>
             <Col className="column">Currency</Col>
             </Row>
-          {props.data &&
-        props.data.countries && props.data.countries.map((country) => (
+          {props.data && props.data.map((country) => (
             <Row className="row">
             <Col className="column">{country.code}</Col>
             <Col className="column">{country.name}</Col>
