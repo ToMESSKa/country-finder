@@ -52,10 +52,6 @@ const App = () => {
     createPageNumbers();
   };
 
-  const handlePag = () => {
-    createCurrentCountries(countries);
-  };
-
   const createCurrentCountries = (countries) => {
     let indexOfLastCountry = currentPage * countriesPerPge;
     let indexOfFirstCountry = indexOfLastCountry - countriesPerPge;
