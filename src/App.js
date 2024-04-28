@@ -47,52 +47,41 @@ const App = () => {
   // const indexOfFirstCountry = indexOfLastCountry - countriesPerPge;
 
   const handlePagination = () => {
-    let indexOfLastCountry = currentPage * countriesPerPge;
-    let indexOfFirstCountry = indexOfLastCountry - countriesPerPge;
-    let currentCountries = data.countries.slice(
-      indexOfFirstCountry,
-      indexOfLastCountry
-    );
-    setCountries(data.countries)
-    setCurrentCountries(currentCountries)
-    createPageNumbers()
+    createCurrentCountries(data.countries);
+    setCountries(data.countries);
+    createPageNumbers();
   };
 
   const handlePag = () => {
-    console.log(countries)
+    createCurrentCountries(countries);
+  };
+
+  const createCurrentCountries = (countries) => {
     let indexOfLastCountry = currentPage * countriesPerPge;
     let indexOfFirstCountry = indexOfLastCountry - countriesPerPge;
     let currentCountries = countries.slice(
       indexOfFirstCountry,
       indexOfLastCountry
     );
-    console.log(currentCountries)
-    setCurrentCountries(currentCountries)
-
+    setCurrentCountries(currentCountries);
   };
 
   const createPageNumbers = () => {
-    console.log(data.countries)
-    let pageNumbersArray = []
-    let mayPageNumbers = data.countries.length / countriesPerPge
-    for (let i = 1; i < mayPageNumbers +1; i++) {
-      pageNumbersArray.push(i)
-    } 
-    setPageNumbers(pageNumbersArray)
-
+    let pageNumbersArray = [];
+    let mayPageNumbers = data.countries.length / countriesPerPge;
+    for (let i = 1; i < mayPageNumbers + 1; i++) {
+      pageNumbersArray.push(i);
+    }
+    setPageNumbers(pageNumbersArray);
   };
-
-
 
   const [executeSearch, { data }] = useLazyQuery(GET_COUNTRIES, {
     variables: searchVariables,
     onCompleted: handlePagination,
   });
 
-  
-
   const handleSearchForContinentAndCurrency = () => {
-    console.log("hell")
+    console.log("hell");
     if (countryCode) {
       setSearchVariables({
         filter: { code: { eq: countryCode } },
@@ -108,8 +97,6 @@ const App = () => {
       searchVariables,
     });
   };
-
- 
 
   return (
     <>
@@ -163,9 +150,14 @@ const App = () => {
           ></CountryCodeSearch>
         </Row>
       </Col>
-      <button onClick={(e) => handlePagination()}>SEE</button>
       <Table data={currentCountries}></Table>
-      <Pagination handlePag ={handlePag} pageNumbers={pageNumbers} setCurrentPage={setCurrentPage} currentPage={currentPage}></Pagination>
+      <Pagination
+        countries={countries}
+        createCurrentCountries={createCurrentCountries}
+        pageNumbers={pageNumbers}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+      ></Pagination>
     </>
   );
 };

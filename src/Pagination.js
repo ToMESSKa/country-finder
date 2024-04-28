@@ -15,7 +15,7 @@ import {
 const Pagination = (props) => {
 
   useEffect(() => {
-    props.handlePag();
+    props.createCurrentCountries(props.countries);
   }, [props.currentPage]);
 
 
